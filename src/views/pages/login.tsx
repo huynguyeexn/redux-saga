@@ -1,5 +1,6 @@
-import { Button, makeStyles, Paper, Typography } from '@material-ui/core';
-import { authActions } from 'features/authSlice';
+import { Button, CircularProgress, makeStyles, Paper, Typography } from '@material-ui/core';
+import { useAppSelector } from 'app/hooks';
+import { authActions } from 'features/auth/authSlice';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 
@@ -25,6 +26,7 @@ const useStyle = makeStyles((theme) => ({
 export const LoginPage = (props: Props) => {
 	const classes = useStyle();
 	const dispatch = useDispatch();
+	const isLoading = useAppSelector((state) => state.auth.isLoading);
 
 	const handleLoginClick = () => {
 		dispatch(
@@ -46,6 +48,7 @@ export const LoginPage = (props: Props) => {
 					color="primary"
 					className={classes.button}
 					onClick={handleLoginClick}
+					startIcon={isLoading ? <CircularProgress color="inherit" size="1rem" /> : null}
 				>
 					Click to login
 				</Button>

@@ -1,7 +1,8 @@
-import { IUser } from './../interface/user';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { delay, fork, put, take, call } from 'redux-saga/effects';
 import { authActions, ILoginPayload } from './authSlice';
+import { push } from 'connected-react-router';
+import { IUser } from 'interface/user';
 
 function* handleLogin(payload: ILoginPayload) {
 	try {
@@ -11,16 +12,16 @@ function* handleLogin(payload: ILoginPayload) {
 		user = { id: 123, username: 'hui' };
 		localStorage.setItem('access_token', 'fake_access_token');
 		yield put(authActions.loginSuccess(user));
+		yield put(push('/admin'));
 	} catch (error) {
 		yield put(authActions.loginError(error.message));
 	}
-	console.log('handleLogin');
 }
 
 function* handleLogout() {
 	yield delay(500);
 	localStorage.removeItem('access_token');
-	console.log('handleLogout');
+	yield put(push('/login'));
 }
 
 function* watchLoginFlow() {
