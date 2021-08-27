@@ -26,6 +26,7 @@ function* fetchHighestStudentList() {
 	const { data }: ListResponse<Student> = yield call(studentApi.getAll, {
 		_page: 1,
 		_limit: 5,
+		_sort: 'mark',
 		_order: 'desc',
 	});
 
@@ -36,6 +37,7 @@ function* fetchLowestStudentList() {
 	const { data }: ListResponse<Student> = yield call(studentApi.getAll, {
 		_page: 1,
 		_limit: 5,
+		_sort: 'mark',
 		_order: 'asc',
 	});
 
@@ -49,6 +51,7 @@ function* fetchRankingByCityList() {
 		call(studentApi.getAll, {
 			_page: 1,
 			_limit: 5,
+			_sort: 'mark',
 			_order: 'desc',
 			city: x.code,
 		})
@@ -58,6 +61,7 @@ function* fetchRankingByCityList() {
 
 	const rankingByCityList: Array<IRannkingByCity> = responseList.map((x, idx) => ({
 		cityId: cityList[idx].code,
+		cityName: cityList[idx].name,
 		rankingList: x.data,
 	}));
 
@@ -72,11 +76,10 @@ function* fetchDashboardData() {
 			call(fetchRankingByCityList),
 			call(fetchStatistics),
 		]);
-
-		yield put(dashboardActions.fetchDataSuccess);
+		yield put(dashboardActions.fetchDataSuccess());
 	} catch (error) {
 		console.log('Failed to fetch dashboard data: ', error);
-		yield put(dashboardActions.fetchDataError);
+		yield put(dashboardActions.fetchDataError());
 	}
 }
 

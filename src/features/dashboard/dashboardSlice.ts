@@ -11,6 +11,7 @@ export interface IDashboardStatistics {
 
 export interface IRannkingByCity {
 	cityId: string;
+	cityName: string;
 	rankingList: Student[];
 }
 
