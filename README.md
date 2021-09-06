@@ -1,20 +1,31 @@
 # Mini Project - Student Management with React + Redux Saga
 
 ### Routes
-- /login
-- /admin
-    - /admin/*
-    - /admin/dashboard
-    - /admin/students
+
+-   /login
+-   /admin
+    -   /dashboard
+    -   /students
+        -   / => Listing
+        -   /add => Add new
+        -   /edit/:id => edit
 
 ### Features
+
 Authentication
-- Login
-- Sign up / Register
-- Forget password
 
+-   Login
+-   Sign up / Register
+-   Forget password
 
+Students
 
+-   Listing
+    -   Search by name
+    -   Filter
+    -   Sort
+    -   Pagination
+-   Add / Edit
 
 ## Available Scripts
 
@@ -35,5 +46,3 @@ It correctly bundles React in production mode and optimizes the build for the be
 
 The build is minified and the filenames include the hashes.<br />
 Your app is ready to be deployed!
-
-
