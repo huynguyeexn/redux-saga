@@ -8,7 +8,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { Student } from 'interface';
-import { Button } from '@material-ui/core';
+import { Button, Typography } from '@material-ui/core';
+import { capitilizedString, markColor } from 'utils';
 
 const useStyles = makeStyles((theme) => ({
 	table: {
@@ -30,7 +31,7 @@ export default function STUDENT_TABLE({ studentList, onEdit, onRemove }: Props) 
 
 	return (
 		<TableContainer component={Paper}>
-			<Table className={classes.table} aria-label="simple table">
+			<Table className={classes.table} aria-label="simple table" size="small">
 				<TableHead>
 					<TableRow>
 						<TableCell>#</TableCell>
@@ -38,7 +39,9 @@ export default function STUDENT_TABLE({ studentList, onEdit, onRemove }: Props) 
 						<TableCell>Gender</TableCell>
 						<TableCell>Mark</TableCell>
 						<TableCell>City</TableCell>
-						<TableCell align="right">Actions</TableCell>
+						<TableCell align="right" width={200}>
+							Actions
+						</TableCell>
 					</TableRow>
 				</TableHead>
 				<TableBody>
@@ -48,8 +51,17 @@ export default function STUDENT_TABLE({ studentList, onEdit, onRemove }: Props) 
 								{idx}
 							</TableCell>
 							<TableCell>{row.name}</TableCell>
-							<TableCell>{row.gender}</TableCell>
-							<TableCell>{row.mark}</TableCell>
+							<TableCell>{capitilizedString(row.gender)}</TableCell>
+							<TableCell>
+								<Typography
+									style={{
+										color: markColor(row.mark),
+										fontWeight: 'bold',
+									}}
+								>
+									{row.mark}
+								</Typography>
+							</TableCell>
 							<TableCell>{row.city}</TableCell>
 							<TableCell align="right">
 								<Button
