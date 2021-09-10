@@ -1,4 +1,5 @@
-import React from 'react';
+import { Button, Typography } from '@material-ui/core';
+import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -6,9 +7,8 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import { Student } from 'interface';
-import { Button, Typography } from '@material-ui/core';
+import { Student, City } from 'interface';
+import React from 'react';
 import { capitilizedString, markColor } from 'utils';
 
 const useStyles = makeStyles((theme) => ({
@@ -22,11 +22,12 @@ const useStyles = makeStyles((theme) => ({
 
 interface Props {
 	studentList: Student[];
+	cityMap: { [key: string]: City };
 	onEdit?: (student: Student) => void;
 	onRemove?: (student: Student) => void;
 }
 
-export default function STUDENT_TABLE({ studentList, onEdit, onRemove }: Props) {
+export default function STUDENT_TABLE({ studentList, cityMap, onEdit, onRemove }: Props) {
 	const classes = useStyles();
 
 	return (
@@ -62,8 +63,8 @@ export default function STUDENT_TABLE({ studentList, onEdit, onRemove }: Props) 
 									{row.mark}
 								</Typography>
 							</TableCell>
-							<TableCell>{row.city}</TableCell>
-							<TableCell align="right">
+							<TableCell>{cityMap[row.city]?.name}</TableCell>
+							<TableCell align="right" width={200}>
 								<Button
 									className={classes.editBtn}
 									variant="outlined"

@@ -1,6 +1,7 @@
 import { Box, Button, Fade, Grid, LinearProgress, makeStyles, Typography } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
+import { cityActions, selectCityListMap } from 'features/cities/citySlice';
 import { useEffect } from 'react';
 import STUDENT_TABLE from './components/studentTable';
 import {
@@ -31,12 +32,17 @@ export const STUDENTS_PAGE = () => {
 	const pagination = useAppSelector(selectStudentPagination);
 	const filter = useAppSelector(selectStudentFilter);
 	const loading = useAppSelector(selectStudentLoading);
+	const cityMap = useAppSelector(selectCityListMap);
 
 	const classes = useStyles();
 
 	useEffect(() => {
 		dispatch(studentAction.fetchStudentList(filter));
 	}, [dispatch, filter]);
+
+	useEffect(() => {
+		dispatch(cityActions.fetchCityList());
+	}, [dispatch]);
 
 	const changePage = (event: object, page: number) => {
 		const payload = {
@@ -60,7 +66,9 @@ export const STUDENTS_PAGE = () => {
 					Add new Student
 				</Button>
 			</Box>
-			<Box>{studentList && <STUDENT_TABLE studentList={studentList} />}</Box>
+			<Box>
+				{studentList && <STUDENT_TABLE cityMap={cityMap} studentList={studentList} />}
+			</Box>
 			<Box my={2} display="flex" justifyContent="center">
 				<Pagination
 					count={Math.ceil(pagination._totalRows / pagination._limit)}
