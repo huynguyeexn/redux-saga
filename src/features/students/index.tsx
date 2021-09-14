@@ -2,7 +2,9 @@ import { Box, Button, Fade, Grid, LinearProgress, makeStyles, Typography } from 
 import { Pagination } from '@material-ui/lab';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { cityActions, selectCityListMap } from 'features/cities/citySlice';
+import { ListParams } from 'interface';
 import { useEffect } from 'react';
+import SearchFilter from './components/searchFilter';
 import STUDENT_TABLE from './components/studentTable';
 import {
 	selectStudentFilter,
@@ -53,6 +55,10 @@ export const STUDENTS_PAGE = () => {
 		dispatch(studentAction.setStudentFilter(payload));
 	};
 
+	const handleSearchChange = (newFilter: ListParams) => {
+		dispatch(studentAction.searchChange(newFilter));
+	};
+
 	return (
 		<Box>
 			<Grid sm={12} className={classes.progress}>
@@ -65,6 +71,9 @@ export const STUDENTS_PAGE = () => {
 				<Button variant="contained" color="primary">
 					Add new Student
 				</Button>
+			</Box>
+			<Box mb={2}>
+				<SearchFilter filter={filter} onSearchChange={handleSearchChange} />
 			</Box>
 			<Box>
 				{studentList && <STUDENT_TABLE cityMap={cityMap} studentList={studentList} />}
