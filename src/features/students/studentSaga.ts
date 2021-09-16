@@ -1,16 +1,20 @@
-import { put, call } from 'redux-saga/effects';
-import { ListParams, ListResponse, Student } from 'interface';
+import { debounce, retry, takeLatest } from '@redux-saga/core/effects';
 import { PayloadAction } from '@reduxjs/toolkit';
-import { studentAction } from './studentSlice';
-import { debounce, takeLatest } from '@redux-saga/core/effects';
 import studentApi from 'api/students.Api';
+import { ListParams, ListResponse, Student } from 'interface';
+import { put } from 'redux-saga/effects';
+import { studentAction } from './studentSlice';
 
 function* featchStudentList(action: PayloadAction<ListParams>) {
 	try {
-		const response: ListResponse<Student> = yield call(studentApi.getAll, action.payload);
+		const response: ListResponse<Student> = yield retry(
+			3,
+			10000,
+			studentApi.getAll,
+			action.payload
+		);
 		yield put(studentAction.fetchStudentSuccess(response));
 	} catch (error) {
-		console.error('Failed to fetch student list: ', error);
 		yield put(studentAction.fetchStudentError);
 	}
 }

@@ -5,6 +5,7 @@ import { cityActions, selectCityListMap } from 'features/cities/citySlice';
 import { ListParams } from 'interface';
 import { useEffect } from 'react';
 import SearchFilter from './components/searchFilter';
+import SelectFilter from './components/selectFilter';
 import STUDENT_TABLE from './components/studentTable';
 import {
 	selectStudentFilter,
@@ -56,7 +57,21 @@ export const STUDENTS_PAGE = () => {
 	};
 
 	const handleSearchChange = (newFilter: ListParams) => {
-		dispatch(studentAction.searchChange(newFilter));
+		const payload = {
+			...filter,
+			...newFilter,
+			_page: 1,
+		};
+		dispatch(studentAction.searchChange(payload));
+	};
+
+	const handleFilterChange = (newFilter: ListParams) => {
+		const payload = {
+			...filter,
+			...newFilter,
+			_page: 1,
+		};
+		dispatch(studentAction.setStudentFilter(payload));
 	};
 
 	return (
@@ -74,6 +89,9 @@ export const STUDENTS_PAGE = () => {
 			</Box>
 			<Box mb={2}>
 				<SearchFilter filter={filter} onSearchChange={handleSearchChange} />
+			</Box>
+			<Box mb={2}>
+				<SelectFilter filter={filter} onFilterChange={handleFilterChange} />
 			</Box>
 			<Box>
 				{studentList && <STUDENT_TABLE cityMap={cityMap} studentList={studentList} />}
