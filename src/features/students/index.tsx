@@ -4,8 +4,7 @@ import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { cityActions, selectCityListMap } from 'features/cities/citySlice';
 import { ListParams } from 'interface';
 import { useEffect } from 'react';
-import SearchFilter from './components/searchFilter';
-import SelectFilter from './components/selectFilter';
+import StudentFilter from './components/studentFilter';
 import STUDENT_TABLE from './components/studentTable';
 import {
 	selectStudentFilter,
@@ -57,26 +56,16 @@ export const STUDENTS_PAGE = () => {
 	};
 
 	const handleSearchChange = (newFilter: ListParams) => {
-		const payload = {
-			...filter,
-			...newFilter,
-			_page: 1,
-		};
-		dispatch(studentAction.searchChange(payload));
+		dispatch(studentAction.searchChange(newFilter));
 	};
 
 	const handleFilterChange = (newFilter: ListParams) => {
-		const payload = {
-			...filter,
-			...newFilter,
-			_page: 1,
-		};
-		dispatch(studentAction.setStudentFilter(payload));
+		dispatch(studentAction.setStudentFilter(newFilter));
 	};
 
 	return (
 		<Box>
-			<Grid sm={12} className={classes.progress}>
+			<Grid className={classes.progress}>
 				<Fade timeout={{ exit: 1000 }} in={loading}>
 					<LinearProgress />
 				</Fade>
@@ -88,10 +77,11 @@ export const STUDENTS_PAGE = () => {
 				</Button>
 			</Box>
 			<Box mb={2}>
-				<SearchFilter filter={filter} onSearchChange={handleSearchChange} />
-			</Box>
-			<Box mb={2}>
-				<SelectFilter filter={filter} onFilterChange={handleFilterChange} />
+				<StudentFilter
+					filter={filter}
+					onSearchChange={handleSearchChange}
+					onFilterChange={handleFilterChange}
+				/>
 			</Box>
 			<Box>
 				{studentList && <STUDENT_TABLE cityMap={cityMap} studentList={studentList} />}
