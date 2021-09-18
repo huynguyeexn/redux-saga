@@ -1,4 +1,12 @@
-import { Button, Typography } from '@material-ui/core';
+import {
+	Button,
+	Dialog,
+	DialogActions,
+	DialogContent,
+	DialogContentText,
+	DialogTitle,
+	Typography,
+} from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -8,7 +16,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import { Student, City } from 'interface';
-import React from 'react';
+import React, { useState } from 'react';
 import { capitilizedString, markColor } from 'utils';
 
 const useStyles = makeStyles((theme) => ({
@@ -28,7 +36,27 @@ interface Props {
 }
 
 export default function STUDENT_TABLE({ studentList, cityMap, onEdit, onRemove }: Props) {
+	const [dialogOpen, setDialogOpen] = useState(false);
+	const [selectedStudent, setSelectedStudent] = useState<Student>();
+
 	const classes = useStyles();
+
+	const handleRemoveClick = (student: Student) => {
+		setDialogOpen(true);
+		setSelectedStudent(student);
+	};
+
+	const handleDialogClose = () => {
+		setDialogOpen(false);
+	};
+
+	const handleRemoveConfirm = () => {
+		if (!onRemove || !selectedStudent) return;
+
+		onRemove(selectedStudent);
+		setDialogOpen(false);
+		setSelectedStudent(undefined);
+	};
 
 	return (
 		<TableContainer component={Paper}>
@@ -76,7 +104,7 @@ export default function STUDENT_TABLE({ studentList, cityMap, onEdit, onRemove }
 								<Button
 									variant="outlined"
 									color="secondary"
-									onClick={() => onRemove?.(row)}
+									onClick={() => handleRemoveClick(row)}
 								>
 									Remove
 								</Button>
@@ -85,6 +113,33 @@ export default function STUDENT_TABLE({ studentList, cityMap, onEdit, onRemove }
 					))}
 				</TableBody>
 			</Table>
+			<Dialog
+				open={dialogOpen}
+				onClose={handleDialogClose}
+				aria-labelledby="alert-dialog-title"
+				aria-describedby="alert-dialog-description"
+			>
+				<DialogTitle id="alert-dialog-title">{'Remove a student?'}</DialogTitle>
+				<DialogContent>
+					<DialogContentText id="alert-dialog-description">
+						Are you sure to remove student named{' '}
+						<strong>{selectedStudent?.name}</strong>. This action can't be undo.
+					</DialogContentText>
+				</DialogContent>
+				<DialogActions>
+					<Button
+						onClick={handleDialogClose}
+						color="default"
+						variant="outlined"
+						autoFocus
+					>
+						Cancel
+					</Button>
+					<Button onClick={handleRemoveConfirm} variant="contained" color="secondary">
+						Remove
+					</Button>
+				</DialogActions>
+			</Dialog>
 		</TableContainer>
 	);
 }

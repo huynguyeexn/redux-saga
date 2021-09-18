@@ -1,8 +1,9 @@
 import { Box, Button, Fade, Grid, LinearProgress, makeStyles, Typography } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
+import studentApi from 'api/students.Api';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { cityActions, selectCityListMap } from 'features/cities/citySlice';
-import { ListParams } from 'interface';
+import { ListParams, Student } from 'interface';
 import { useEffect } from 'react';
 import StudentFilter from './components/studentFilter';
 import STUDENT_TABLE from './components/studentTable';
@@ -63,6 +64,16 @@ export const STUDENTS_PAGE = () => {
 		dispatch(studentAction.setStudentFilter(newFilter));
 	};
 
+	const handleRemoveStudent = async (student: Student) => {
+		if (!student.id) return;
+		try {
+			await studentApi.remove(student.id);
+			dispatch(studentAction.setStudentFilter({ ...filter }));
+		} catch (error) {
+			console.error('handleRemoveStudent:', error);
+		}
+	};
+
 	return (
 		<Box>
 			<Grid className={classes.progress}>
@@ -84,7 +95,13 @@ export const STUDENTS_PAGE = () => {
 				/>
 			</Box>
 			<Box>
-				{studentList && <STUDENT_TABLE cityMap={cityMap} studentList={studentList} />}
+				{studentList && (
+					<STUDENT_TABLE
+						cityMap={cityMap}
+						studentList={studentList}
+						onRemove={handleRemoveStudent}
+					/>
+				)}
 			</Box>
 			<Box my={2} display="flex" justifyContent="center">
 				<Pagination
