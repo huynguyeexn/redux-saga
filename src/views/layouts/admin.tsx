@@ -1,6 +1,7 @@
 import { Box, makeStyles } from '@material-ui/core';
 import { DASHBOARD_PAGE } from 'features/dashboard';
 import { STUDENTS_PAGE } from 'features/students';
+import ADD_EDIT_STUDENT from 'features/students/AddEdit';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { HEADER } from 'views/components/common/Header';
 import { SIDEBAR } from 'views/components/common/Sidebar';
@@ -41,8 +42,11 @@ export const AdminLayout = () => {
 					<Route path="/admin/dashboard">
 						<DASHBOARD_PAGE />
 					</Route>
-					<Route path="/admin/students">
+					<Route exact path="/admin/students">
 						<STUDENTS_PAGE />
+					</Route>
+					<Route exact path={['/admin/students/add', '/admin/students/:studentId/edit']}>
+						<ADD_EDIT_STUDENT />
 					</Route>
 					<Redirect exact from="/admin" to="/admin/dashboard" />
 					<Route>Not found</Route>

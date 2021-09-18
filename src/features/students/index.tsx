@@ -1,10 +1,12 @@
-import { Box, Button, Fade, Grid, LinearProgress, makeStyles, Typography } from '@material-ui/core';
+import { Box, Button, makeStyles, Typography } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
 import studentApi from 'api/students.Api';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { cityActions, selectCityListMap } from 'features/cities/citySlice';
 import { ListParams, Student } from 'interface';
 import { useEffect } from 'react';
+import { Link, useHistory, useRouteMatch } from 'react-router-dom';
+import ProgessLoading from 'views/components/common/ProgessLoading';
 import StudentFilter from './components/studentFilter';
 import STUDENT_TABLE from './components/studentTable';
 import {
@@ -24,12 +26,11 @@ const useStyles = makeStyles((theme) => ({
 		alignItems: 'center',
 		marginBottom: theme.spacing(3),
 	},
-	progress: {
-		height: '5px',
-	},
 }));
 
 export const STUDENTS_PAGE = () => {
+	const match = useRouteMatch();
+	const history = useHistory();
 	const dispatch = useAppDispatch();
 	const studentList = useAppSelector(selectStudentList);
 	const pagination = useAppSelector(selectStudentPagination);
@@ -74,18 +75,20 @@ export const STUDENTS_PAGE = () => {
 		}
 	};
 
+	const handleEditStudent = (student: Student) => {
+		history.push(`${match.url}/${student.id}/edit`);
+	};
+
 	return (
 		<Box>
-			<Grid className={classes.progress}>
-				<Fade timeout={{ exit: 1000 }} in={loading}>
-					<LinearProgress />
-				</Fade>
-			</Grid>
+			<ProgessLoading loading={loading} />
 			<Box className={classes.header}>
 				<Typography variant="h4">Student List</Typography>
-				<Button variant="contained" color="primary">
-					Add new Student
-				</Button>
+				<Link to={`${match.url}/add`} style={{ textDecoration: 'none' }}>
+					<Button variant="contained" color="primary">
+						Add new Student
+					</Button>
+				</Link>
 			</Box>
 			<Box mb={2}>
 				<StudentFilter
@@ -100,6 +103,7 @@ export const STUDENTS_PAGE = () => {
 						cityMap={cityMap}
 						studentList={studentList}
 						onRemove={handleRemoveStudent}
+						onEdit={handleEditStudent}
 					/>
 				)}
 			</Box>
